@@ -1,3 +1,20 @@
+import nltk
+# nltk.download()
+
+# tagged_sentences = nltk.corpus.brown.tagged_sents()
+tagged_sentences = nltk.corpus.treebank.tagged_sents()
+
+print tagged_sentences[0]
+print "Tagged sentences: ", len(tagged_sentences)
+print "Tagged words:", len(nltk.corpus.brown.tagged_words())
+
+# [(u'Pierre', u'NNP'), (u'Vinken', u'NNP'), (u',', u','), (u'61', u'CD'), (u'years', u'NNS'), (u'old', u'JJ'), (u',', u','), (u'will', u'MD'), (u'join', u'VB'), (u'the', u'DT'), (u'board', u'NN'), (u'as', u'IN'), (u'a', u'DT'), (u'nonexecutive', u'JJ')(u'director', u'NN'), (u'Nov.', u'NNP'), (u'29', u'CD'), (u'.', u'.')]
+# Tagged sentences:  3914
+# Tagged words: 1161192
+
+def untag(tagged_sentence):
+    return [w for w, t in tagged_sentence]
+
 def features(sentence, index):
     """ sentence: [w1, w2, ...], index: the index of the word """
     return {
@@ -23,20 +40,42 @@ def features(sentence, index):
 import pprint
 pprint.pprint(features(['This', 'is', 'a', 'sentence'], 2))
 
-{'capitals_inside': False,
- 'has_hyphen': False,
- 'is_all_caps': False,
- 'is_all_lower': True,
- 'is_capitalized': False,
- 'is_first': False,
- 'is_last': False,
- 'is_numeric': False,
- 'next_word': 'sentence',
- 'prefix-1': 'a',
- 'prefix-2': 'a',
- 'prefix-3': 'a',
- 'prev_word': 'is',
- 'suffix-1': 'a',
- 'suffix-2': 'a',
- 'suffix-3': 'a',
- 'word': 'a'}
+# Split the dataset for training and testing
+cutoff = int(.75 * len(tagged_sentences))
+training_sentences = tagged_sentences[:cutoff]
+test_sentences = tagged_sentences[cutoff:]
+
+print len(training_sentences)   # 2935
+print len(test_sentences)         # 979
+
+def transform_to_dataset(tagged_sentences):
+    X, y = [], []
+
+    for tagged in tagged_sentences:
+        for index in range(len(tagged)):
+            X.append(features(untag(tagged), index))
+            y.append(tagged[index][1])
+
+    return X, y
+
+X, y = transform_to_dataset(training_sentences)
+
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.feature_extraction import DictVectorizer
+from sklearn.pipeline import Pipeline
+
+clf = Pipeline([
+    ('vectorizer', DictVectorizer(sparse=False)),
+    ('classifier', DecisionTreeClassifier(criterion='entropy'))
+])
+
+clf.fit(X[:10000], y[:10000])   # Use only the first 10K samples if you're running it multiple times. It takes a fair bit :)
+
+print 'Training completed'
+
+X_test, y_test = transform_to_dataset(test_sentences)
+
+print "Accuracy:", clf.score(X_test, y_test)
+
+# Accuracy: 0.904186083882
+# not bad at all :)
