@@ -1,5 +1,5 @@
 import nltk
-# nltk.download()
+nltk.download('treebank')
 
 # tagged_sentences = nltk.corpus.brown.tagged_sents()
 tagged_sentences = nltk.corpus.treebank.tagged_sents()
