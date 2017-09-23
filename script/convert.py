@@ -20,10 +20,6 @@ def save_list(fname, fsave):
 
     list_complete = list_complete[1:]
 
-    print(list_complete[0])
-    print('--------------')
-    print(list_complete[1])
-
     # fsave = '../UD_Indonesian_Conll2017/list_of_tuple.pickle'
     with open(fsave, 'wb') as handle:
         pickle.dump(list_complete, handle, protocol=pickle.HIGHEST_PROTOCOL)
@@ -35,10 +31,6 @@ def load_list(fload):
     # fload = '../UD_Indonesian_Conll2017/list_of_tuple.pickle'
     with open(fload, 'rb') as handle:
         list_complete = pickle.load(handle)
-
-    print(list_complete[0])
-    print('--------------')
-    print(list_complete[1])
 
     return list_complete
 
