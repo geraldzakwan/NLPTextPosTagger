@@ -27,14 +27,6 @@ if __name__ == '__main__':
         train_tagged_sentences = convert.load_list(fload_train)
         test_tagged_sentences = convert.load_list(fload_test)
 
-    # Check if list loaded well
-    # print tagged_sentences[0]
-    # print '-----------------'
-    # print tagged_sentences[1]
-
-    # Number of sentences
-    # print "Tagged sentences: ", len(tagged_sentences)
-
     # Split the dataset for training and testing
     # cutoff = int(.75 * len(tagged_sentences))
     # training_sentences = tagged_sentences[:cutoff]
@@ -44,8 +36,8 @@ if __name__ == '__main__':
     test_sentences = test_tagged_sentences
 
     # Number of train and test
-    # print len(training_sentences)
-    # print len(test_sentences)
+    print 'Training data : ' + str(len(training_sentences))
+    print 'Testing data : ' + str(len(test_sentences))
 
     X, y = features.transform_to_dataset(training_sentences)
 
@@ -54,7 +46,8 @@ if __name__ == '__main__':
         ('classifier', DecisionTreeClassifier(criterion='entropy'))
     ])
 
-    clf.fit(X[:10000], y[:10000])   # Use only the first 10K samples if you're running it multiple times. It takes a fair bit :)
+    # Use only the first 10K samples if you're running it multiple times. It takes a fair bit :)
+    clf.fit(X[:10000], y[:10000])
 
     print 'Training completed'
 

@@ -18,7 +18,15 @@ def save_list(fname, fsave):
     		tokens = line.split('\t')
     		list_of_tuple.append((tokens[1],tokens[3]))
 
+    # To get the last sentence
+    list_complete.append(list_of_tuple)
+    # The first element is None, so remove it
     list_complete = list_complete[1:]
+
+    # Check if true
+    # print(list_complete[0][0])
+    # print '---------------'
+    # print(list_complete[len(list_complete)-1][0])
 
     # fsave = '../UD_Indonesian_Conll2017/list_of_tuple.pickle'
     with open(fsave, 'wb') as handle:
