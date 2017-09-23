@@ -1,3 +1,4 @@
+import sys
 import nltk
 nltk.download('treebank')
 
@@ -5,6 +6,9 @@ nltk.download('treebank')
 tagged_sentences = nltk.corpus.treebank.tagged_sents()
 
 print tagged_sentences[0]
+print '-----------------'
+print tagged_sentences[1]
+sys.exit()
 print "Tagged sentences: ", len(tagged_sentences)
 print "Tagged words:", len(nltk.corpus.brown.tagged_words())
 
