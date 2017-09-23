@@ -26,3 +26,13 @@ def extract(sentence, index):
         'is_numeric': sentence[index].isdigit(),
         'capitals_inside': sentence[index][1:].lower() != sentence[index][1:]
     }
+
+def transform_to_dataset(tagged_sentences):
+    X, y = [], []
+
+    for tagged in tagged_sentences:
+        for index in range(len(tagged)):
+            X.append(extract(untag(tagged), index))
+            y.append(tagged[index][1])
+
+    return X, y

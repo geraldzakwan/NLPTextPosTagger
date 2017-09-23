@@ -1,30 +1,31 @@
 import sys
-import pprint
 import convert
 import features
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.feature_extraction import DictVectorizer
 from sklearn.pipeline import Pipeline
 
-def transform_to_dataset(tagged_sentences):
-    X, y = [], []
-
-    for tagged in tagged_sentences:
-        for index in range(len(tagged)):
-            X.append(features.extract(features.untag(tagged), index))
-            y.append(tagged[index][1])
-
-    return X, y
-
 if __name__ == '__main__':
     # Save or load dataset to list of list of tuple
+    if(sys.argv[2] == '1'):
+        path_name = '../UD_Indonesian_Conll2017/'
+    elif(sys.argv[2] == '2'):
+        path_name = '../UD_Indonesian_v2.0/'
+    else:
+        sys.exit("Option error")
+
     if (sys.argv[1] == 'save'):
-        fname = '../UD_Indonesian_Conll2017/id-ud-train.conllu'
-        fsave = '../UD_Indonesian_Conll2017/list_of_tuple.pickle'
-        tagged_sentences = convert.save_list(fname, fsave)
+        fname_train = path_name + 'id-ud-train.conllu'
+        fsave_train = path_name + 'list_of_tuple_train.pickle'
+        fname_test = path_name + 'id-ud-dev.conllu'
+        fsave_test = path_name + 'list_of_tuple_dev.pickle'
+        train_tagged_sentences = convert.save_list(fname_train, fsave_train)
+        test_tagged_sentences = convert.save_list(fname_test, fsave_test)
     elif (sys.argv[1] == 'load'):
-        fload = '../UD_Indonesian_Conll2017/list_of_tuple.pickle'
-        tagged_sentences = convert.load_list(fload)
+        fload_train = path_name + 'list_of_tuple_train.pickle'
+        fload_test = path_name + 'list_of_tuple_dev.pickle'
+        train_tagged_sentences = convert.load_list(fload_train)
+        test_tagged_sentences = convert.load_list(fload_test)
 
     # Check if list loaded well
     # print tagged_sentences[0]
@@ -34,17 +35,19 @@ if __name__ == '__main__':
     # Number of sentences
     # print "Tagged sentences: ", len(tagged_sentences)
 
-    pprint.pprint(features.extract(['This', 'is', 'a', 'sentence'], 2))
-
     # Split the dataset for training and testing
-    cutoff = int(.75 * len(tagged_sentences))
-    training_sentences = tagged_sentences[:cutoff]
-    test_sentences = tagged_sentences[cutoff:]
+    # cutoff = int(.75 * len(tagged_sentences))
+    # training_sentences = tagged_sentences[:cutoff]
+    # test_sentences = tagged_sentences[cutoff:]
 
-    print len(training_sentences)   # 2935
-    print len(test_sentences)         # 979
+    training_sentences = train_tagged_sentences
+    test_sentences = test_tagged_sentences
 
-    X, y = transform_to_dataset(training_sentences)
+    # Number of train and test
+    # print len(training_sentences)
+    # print len(test_sentences)
+
+    X, y = features.transform_to_dataset(training_sentences)
 
     clf = Pipeline([
         ('vectorizer', DictVectorizer(sparse=False)),
@@ -55,9 +58,6 @@ if __name__ == '__main__':
 
     print 'Training completed'
 
-    X_test, y_test = transform_to_dataset(test_sentences)
+    X_test, y_test = features.transform_to_dataset(test_sentences)
 
     print "Accuracy:", clf.score(X_test, y_test)
-
-    # Accuracy: 0.904186083882
-    # not bad at all :)
