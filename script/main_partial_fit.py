@@ -70,7 +70,10 @@ if __name__ == '__main__':
         print "Running Partial Fit from : " + str(first_word) + " to " + str(last_word)
 
         # vX = vect.fit(X[first_word:last_word])
-        vX = vect.fit_transform(X[first_word:last_word])
+        if(first_word == 0):
+            vX = vect.fit_transform(X[first_word:last_word])
+        else:
+            vX = vect.transform(X[first_word:last_word])
         vy = y[first_word:last_word]
         clf_2.partial_fit(vX, vy, classes=np.unique(vy))
 
@@ -79,6 +82,8 @@ if __name__ == '__main__':
             first_word = first_word + chunk
             last_word = last_word + chunk
         else:
+            # Somehow error di akhir
+            total_processed = total_processed + chunk
             first_word = first_word + chunk
             last_word = total_word
 
@@ -86,4 +91,10 @@ if __name__ == '__main__':
 
     X_test, y_test = features.transform_to_dataset(test_sentences)
 
-    print "Accuracy:", clf.score(X_test, y_test)
+    # vX_test = vect.fit_transform(X_test)
+    # vy_test = y_test
+    # print "Accuracy:", clf_2.score(vX_test, vy_test)
+
+    vX = vect.transform(X_test)
+    vy = y_test
+    print "Accuracy:", clf_2.score(vX, vy)
