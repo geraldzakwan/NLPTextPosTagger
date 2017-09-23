@@ -2,8 +2,11 @@ import sys
 import convert
 import features
 from sklearn.tree import DecisionTreeClassifier
+from sklearn.linear_model import SGDClassifier
 from sklearn.feature_extraction import DictVectorizer
 from sklearn.pipeline import Pipeline
+
+chunk = 20000
 
 if __name__ == '__main__':
     # Save or load dataset to list of list of tuple
@@ -41,13 +44,61 @@ if __name__ == '__main__':
 
     X, y = features.transform_to_dataset(training_sentences)
 
-    clf = Pipeline([
+    # Number of X and y
+    print 'X : ' + str(len(X))
+    print 'y : ' + str(len(y))
+
+    # clf = Pipeline([
+    #     ('vectorizer', DictVectorizer(sparse=False)),
+    #     ('classifier', DecisionTreeClassifier(criterion='entropy'))
+    # ])
+
+    # # Iterate per chunk sample, so it fits in memory
+    # # Salah, ni ngk bisa soalnya mesti support partial fit
+    # # Kalo ngk support sama aja training ulang
+    # total_word = len(X)
+    # total_processed = 0
+    # first_word = 0
+    # last_word = chunk
+    # while(total_processed < total_word):
+    #     clf.fit(X[first_word:last_word], y[first_word:last_word])
+    #     total_processed = total_processed + chunk
+    #     if(last_word + chunk < total_word - 1):
+    #         first_word = first_word + chunk
+    #         last_word = last_word + chunk
+    #     else:
+    #         first_word = first_word + chunk
+    #         last_word = total_word
+
+    # # Bukti : yg atas bakal sama aja kek gini
+    # clf.fit(X[80000:len(X)], y[80000:len(y)])
+
+    # Use partial fit instead
+    # partial_fit with partial_fit(X, y[, classes, sample_weight])
+    # clf_2 = SGDClassifier(alpha=.0001, loss='log', penalty='l2', n_jobs=-1,
+    #                       #shuffle=True, n_iter=10,
+    #                       verbose=1)
+
+    clf_2 = Pipeline([
         ('vectorizer', DictVectorizer(sparse=False)),
-        ('classifier', DecisionTreeClassifier(criterion='entropy'))
+        ('classifier', SGDClassifier(alpha=.0001, loss='log', penalty='l2', n_jobs=-1, verbose=1))
     ])
 
-    # Use only the first 10K samples if you're running it multiple times. It takes a fair bit :)
-    clf.fit(X[:10000], y[:10000])
+    total_word = len(X)
+    total_processed = 0
+    first_word = 0
+    last_word = chunk
+    while(total_processed < total_word):
+        print "Running Partial Fit from : " + str(first_word) + " to " + str(last_word)
+        clf_2.partial_fit(X[first_word:last_word], y[first_word:last_word])
+        # clf_2.partial_fit(X[:99, :], y[:99, 0], classes=[0, 1])
+        total_processed = total_processed + chunk
+        if(last_word + chunk < total_word - 1):
+            first_word = first_word + chunk
+            last_word = last_word + chunk
+        else:
+            first_word = first_word + chunk
+            last_word = total_word
 
     print 'Training completed'
 
