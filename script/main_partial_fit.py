@@ -3,7 +3,11 @@ import convert
 import features
 import numpy as np
 from sklearn.tree import DecisionTreeClassifier
-from sklearn.linear_model import SGDClassifier
+
+from sklearn.linear_model import SGDClassifier, Perceptron, PassiveAggressiveClassifier
+from sklearn.naive_bayes import MultinomialNB, BernoulliNB
+from sklearn.neural_network import MLPClassifier
+
 from sklearn.feature_extraction import DictVectorizer
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.pipeline import Pipeline
@@ -50,9 +54,32 @@ if __name__ == '__main__':
 
     # Use partial fit instead
     # partial_fit with partial_fit(X, y[, classes, sample_weight])
-    clf_2 = SGDClassifier(alpha=.0001, loss='log', penalty='l2', n_jobs=-1,
-                          #shuffle=True, n_iter=10,
-                          verbose=1)
+
+
+    # Using Perceptron
+    # clf_2 = Perceptron(alpha=.0001, penalty='l2', n_jobs=-1,
+    # #                       #shuffle=True, n_iter=10,
+    #                       verbose=1)
+
+    # Using PassiveAggressiveClassifier
+    # clf_2 = PassiveAggressiveClassifier(n_jobs=-1,
+    # #                       #shuffle=True, n_iter=10,
+    #                       verbose=1)
+
+    # Using SGD Classifier
+    # clf_2 = SGDClassifier(alpha=.0001, loss='log', penalty='l2', n_jobs=-1,
+    # #                       #shuffle=True, n_iter=10,
+    #                       verbose=1)
+
+    # Using Multinomial Naive Bayes
+    # clf_2 = MultinomialNB(alpha=.0001)
+
+    # Using Bernoulli Naive Bayes
+    # clf_2 = BernoulliNB(alpha=.0001)
+
+    # Using Multi-layer Perceptron classifier.
+    clf_2 = MLPClassifier(alpha=.0001)
+    
 
     # Sayangnya pipeline ngk bisa partial_fit
     # clf_2 = Pipeline([
