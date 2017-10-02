@@ -17,8 +17,10 @@ if __name__ == '__main__':
 
     # Save or load dataset to list of list of tuple
     if(sys.argv[2] == '1'):
+        print "Using data ../UD_Indonesian_Conll2017/"
         path_name = '../UD_Indonesian_Conll2017/'
     elif(sys.argv[2] == '2'):
+        print "Using data ../UD_Indonesian_v2.0/"
         path_name = '../UD_Indonesian_v2.0/'
     else:
         sys.exit("Option error")
@@ -57,27 +59,33 @@ if __name__ == '__main__':
 
 
     # Using Perceptron
+    # print "\n\n============Using Perceptron============\n"
     # clf_2 = Perceptron(alpha=.0001, penalty='l2', n_jobs=-1,
     # #                       #shuffle=True, n_iter=10,
     #                       verbose=1)
 
     # Using PassiveAggressiveClassifier
+    # print "\n\n============Using PassiveAggressiveClassifier============\n"
     # clf_2 = PassiveAggressiveClassifier(n_jobs=-1,
     # #                       #shuffle=True, n_iter=10,
     #                       verbose=1)
 
     # Using SGD Classifier
+    # print "\n\n============Using SGDClassifier============\n"
     # clf_2 = SGDClassifier(alpha=.0001, loss='log', penalty='l2', n_jobs=-1,
     # #                       #shuffle=True, n_iter=10,
     #                       verbose=1)
 
     # Using Multinomial Naive Bayes
+    # print "\n\n============Using MultinomialNB============\n"
     # clf_2 = MultinomialNB(alpha=.0001)
 
     # Using Bernoulli Naive Bayes
+    # print "\n\n============Using BernoulliNB============\n"
     # clf_2 = BernoulliNB(alpha=.0001)
 
     # Using Multi-layer Perceptron classifier.
+    print "\n\n============Using MLPClassifier============\n"
     clf_2 = MLPClassifier(alpha=.0001)
     
 
