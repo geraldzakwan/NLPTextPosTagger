@@ -118,23 +118,20 @@ if __name__ == '__main__':
         save_filename = "dataset_" + sys.argv[2] + "_classifier_" + sys.argv[4] + "_chunk_" + sys.argv[3] + ".pickle"
         pickle.dump(clf_2, open(save_filename, "wb"))
 
+        save_filename = save_filename + "vect"
+        pickle.dump(vect, open(save_filename, "wb"))
+
         vX = vect.transform(X_test)
         vy = y_test
         print "Accuracy:", clf_2.score(vX, vy)
 
+        print("Prediction result : ")
         vI = vect.transform(input_sentences_transformed)
         print(clf_2.predict(vI))
 
-        # input_sentence = sys.argv[5]
-        # # list_of_input_sentence = []
-        # # for word in nltk.word_tokenize(input_sentence):
-        # #     list_of_input_sentence.append(word)
-        # # vInput = vect.transform(list_of_input_sentence)
-        # print features.pos_tag(nltk.word_tokenize(input_sentence), clf_2)
-        # # print features.pos_tag(nltk.word_tokenize(input_sentence), clf_2)
-
     elif (sys.argv[1] == 'load'):
         clf_2 = pickle.load(open(sys.argv[2], "rb" ))
+        vect = pickle.load(open(sys.argv[2] + "vect", "rb" ))
 
         # Save or load dataset to list of list of tuple
         if("dataset_1" in sys.argv[2]):
@@ -157,19 +154,16 @@ if __name__ == '__main__':
         X, y = features.transform_to_dataset(training_sentences)
         X_test, y_test = features.transform_to_dataset(test_sentences)
 
-        # vect = DictVectorizer(sparse=False)
-        # vX = vect.fit_transform(X_test)
-        # vy = y_test
+        vX = vect.fit_transform(X_test)
+        vy = y_test
         print "Accuracy:", clf_2.score(vX, vy)
 
-        input_sentence = sys.argv[3]
+        # To be predicted
+        list_of_input_sentence = []
+        for i in range(3, len(sys.argv)):
+            list_of_input_sentence.append(nltk.word_tokenize(sys.argv[i]))
+        input_sentences_transformed = features.transform_to_dataset_input(list_of_input_sentence)
 
-        # new_test_sentences = []
-        # for i in range(0, len(test_sentences[0])):
-        #     new_test_sentences.append(test_sentences[0][i][0])
-        # print(new_test_sentences)
-        # print features.pos_tag(X_test[0:2], clf_2)
-
-        # print(X_test)
-        # print clf_2.predict(X_test)
-        print features.pos_tag(nltk.word_tokenize(sys.argv[3]), clf_2)
+        print("Prediction result : ")
+        vI = vect.transform(input_sentences_transformed)
+        print(clf_2.predict(vI))
