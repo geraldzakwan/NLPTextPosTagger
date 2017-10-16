@@ -5,6 +5,10 @@ import nltk
 def untag(tagged_sentence):
     return [w for w, t in tagged_sentence]
 
+def untag_input(tagged_sentence):
+    # print [w for w in tagged_sentence]
+    return [w for w in tagged_sentence]
+
 def pos_tag(sentence, clf):
     tagged_sentence = []
     # Untuk tree only
@@ -15,6 +19,9 @@ def pos_tag(sentence, clf):
     # print(list_to_predict)
     # tags = clf.predict(list_to_predict)
     return zip(sentence, tags)
+
+def pos_tag_dl(sentence, clf):
+    return true
 
 def extract(sentence, index):
     """ sentence: [w1, w2, ...], index: the index of the word """
@@ -44,8 +51,19 @@ def transform_to_dataset(tagged_sentences):
     X, y = [], []
 
     for tagged in tagged_sentences:
+        # print("Tagged : ", tagged)
         for index in range(len(tagged)):
             X.append(extract(untag(tagged), index))
             y.append(tagged[index][1])
 
     return X, y
+
+def transform_to_dataset_input(tagged_sentences):
+    X = []
+
+    for tagged in tagged_sentences:
+        # print("Tagged : ", tagged)
+        for index in range(len(tagged)):
+            X.append(extract(untag_input(tagged), index))
+
+    return X

@@ -42,10 +42,20 @@ if __name__ == '__main__':
 
         X, y = features.transform_to_dataset(training_sentences)
         X_test, y_test = features.transform_to_dataset(test_sentences)
+        # print(X[0])
+        # sys.exit()
 
         # Number of X and y
         print 'X : ' + str(len(X))
         print 'y : ' + str(len(y))
+
+        # To be predicted
+        list_of_input_sentence = []
+        for i in range(5, len(sys.argv)):
+            list_of_input_sentence.append(nltk.word_tokenize(sys.argv[i]))
+        input_sentences_transformed = features.transform_to_dataset_input(list_of_input_sentence)
+        # print(input_sentences_transformed)
+        # sys.exit()
 
         if(sys.argv[4] == '1'):
             # Using Perceptron
@@ -112,8 +122,17 @@ if __name__ == '__main__':
         vy = y_test
         print "Accuracy:", clf_2.score(vX, vy)
 
-        input_sentence = sys.argv[5]
-        print features.pos_tag(nltk.word_tokenize(input_sentence), clf_2)
+        vI = vect.transform(input_sentences_transformed)
+        print(clf_2.predict(vI))
+
+        # input_sentence = sys.argv[5]
+        # # list_of_input_sentence = []
+        # # for word in nltk.word_tokenize(input_sentence):
+        # #     list_of_input_sentence.append(word)
+        # # vInput = vect.transform(list_of_input_sentence)
+        # print features.pos_tag(nltk.word_tokenize(input_sentence), clf_2)
+        # # print features.pos_tag(nltk.word_tokenize(input_sentence), clf_2)
+
     elif (sys.argv[1] == 'load'):
         clf_2 = pickle.load(open(sys.argv[2], "rb" ))
 
@@ -138,7 +157,11 @@ if __name__ == '__main__':
         X, y = features.transform_to_dataset(training_sentences)
         X_test, y_test = features.transform_to_dataset(test_sentences)
 
-        vect = DictVectorizer(sparse=False)
+        # vect = DictVectorizer(sparse=False)
+        # vX = vect.fit_transform(X_test)
+        # vy = y_test
+        print "Accuracy:", clf_2.score(vX, vy)
+
         input_sentence = sys.argv[3]
 
         # new_test_sentences = []
