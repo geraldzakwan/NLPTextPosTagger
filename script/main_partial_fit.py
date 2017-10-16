@@ -94,6 +94,7 @@ if __name__ == '__main__':
         total_processed = 0
         first_word = 0
         last_word = chunk
+        classes = np.unique(y[:])
         while(total_processed <= total_word):
             print "Running Partial Fit from : " + str(first_word) + " to " + str(last_word)
 
@@ -102,14 +103,14 @@ if __name__ == '__main__':
             else:
                 vX = vect.transform(X[first_word:last_word])
             vy = y[first_word:last_word]
-            clf_2.partial_fit(vX, vy, classes=np.unique(vy))
+            clf_2.partial_fit(vX, vy, classes=classes)
 
             total_processed = total_processed + chunk
             if(last_word + chunk < total_word - 1):
                 first_word = first_word + chunk
                 last_word = last_word + chunk
             else:
-                total_processed = total_processed + chunk
+                # total_processed = total_processed + chunk
                 first_word = first_word + chunk
                 last_word = total_word
 
@@ -154,7 +155,7 @@ if __name__ == '__main__':
         X, y = features.transform_to_dataset(training_sentences)
         X_test, y_test = features.transform_to_dataset(test_sentences)
 
-        vX = vect.fit_transform(X_test)
+        vX = vect.transform(X_test)
         vy = y_test
         print "Accuracy:", clf_2.score(vX, vy)
 
